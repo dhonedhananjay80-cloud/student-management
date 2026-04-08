@@ -1,18 +1,6 @@
-// server.js
-// Home page route
-app.get("/", (req, res) => {
-  res.send(`
-    <h1>Welcome to Student Management</h1>
-    <form action="/login" method="POST">
-      <input type="text" name="app_id" placeholder="App ID" required><br>
-      <input type="password" name="password" placeholder="Password" required><br>
-      <button type="submit">Login</button>
-    </form>
-  `);
-});
 const express = require("express");
 const bodyParser = require("body-parser");
-const { Pool } = require("pg"); // postgres साठी
+const { Pool } = require("pg"); // PostgreSQL साठी
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -29,6 +17,18 @@ const pool = new Pool({
 pool.connect(err => {
   if (err) throw err;
   console.log("Connected to Render PostgreSQL Database!");
+});
+
+// Home page route (must be after app initialization)
+app.get("/", (req, res) => {
+  res.send(`
+    <h1>Welcome to Student Management</h1>
+    <form action="/login" method="POST">
+      <input type="text" name="app_id" placeholder="App ID" required><br>
+      <input type="password" name="password" placeholder="Password" required><br>
+      <button type="submit">Login</button>
+    </form>
+  `);
 });
 
 // Login route
