@@ -1,18 +1,29 @@
 // server.js
+// Home page route
+app.get("/", (req, res) => {
+  res.send(`
+    <h1>Welcome to Student Management</h1>
+    <form action="/login" method="POST">
+      <input type="text" name="app_id" placeholder="App ID" required><br>
+      <input type="password" name="password" placeholder="Password" required><br>
+      <button type="submit">Login</button>
+    </form>
+  `);
+});
 const express = require("express");
 const bodyParser = require("body-parser");
-const { Pool } = require("pg"); // PostgreSQL module
+const { Pool } = require("pg"); // postgres साठी
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
 
-// PostgreSQL connection (Render DB)
+// PostgreSQL connection
 const pool = new Pool({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASS,
   database: process.env.DB_NAME,
-  port: process.env.DB_PORT
+  port: process.env.DB_PORT || 5432
 });
 
 pool.connect(err => {
@@ -24,7 +35,8 @@ pool.connect(err => {
 app.post("/login", (req, res) => {
   const { app_id, password } = req.body;
 
-  const sql = "SELECT * FROM students WHERE app_id=$1 AND password=$2"; // PostgreSQL uses $1, $2
+  const sql = "SELECT * FROM students WHERE app_id=$1 AND password=$2";
+
   pool.query(sql, [app_id, password], (err, result) => {
     if (err) throw err;
 
@@ -43,7 +55,6 @@ app.post("/login", (req, res) => {
   });
 });
 
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+app.listen(3000, () => {
+  console.log("Server running on port 3000");
 });
