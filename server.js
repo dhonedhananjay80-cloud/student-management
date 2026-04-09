@@ -55,6 +55,7 @@ app.post("/login", (req, res) => {
   });
 });
 
-app.listen(3000, () => {
-  console.log("Server running on port 3000");
+// Listen on dynamic port for Render or fallback 3000 for local
+app.listen(process.env.PORT || 3000, () => {
+  console.log("Server running");
 });
